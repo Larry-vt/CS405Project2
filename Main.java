@@ -25,13 +25,13 @@ public class Main {
        		 MEMORY_MAX =  Integer.parseInt(arr[1]);
        		 break;
        	 case 1:
-       		PROC_SIZE_MAX =  Integer.parseInt(arr[1]);
+       		PROC_SIZE_MAX =  Integer.parseInt(arr[1]);//not zero
        		 break;
        	 case 2:
        		NUM_PROC =  Integer.parseInt(arr[1]);
        		 break;
        	 case 3:
-       		MAX_PROC_TIME=  Integer.parseInt(arr[1]);
+       		MAX_PROC_TIME=  Integer.parseInt(arr[1]);//convert to seconds and whole and not 0
        		 break;
        	 }
 		}
