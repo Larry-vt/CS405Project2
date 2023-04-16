@@ -14,12 +14,26 @@ public class MemoryAllocator {
 		all = this.all;
 		total_Processes = all.size();
 	}
-	public void print() {
-		//[0,1,2,3];
-		//go through runninglist and just print P1[15s](30kb),Free (40kb), P3(100s), Free (10kb) 
-		// count holes(free), avg size of holes,(Free), total size(free+free.size), percent free free_total size/memory_max
+	public void print() { // print every run;
+	System.out.println(running);//prints out current running list
+	//number of holes
+	double amountHole =0;
+	int totalHole =0;
+	for(int i =0;i<running.size();i++) {
+		if(running.get(i).name.equals("free")) {//if free space
+			totalHole++;
+			amountHole =running.get(i).size;
+		}
+		//total size of current holes
+		//total free / total memory 
+		double avg = amountHole/totalHole;
+		double percent = (totalHole/memory_Max) * 100;
+		System.out.println("Stats: Number of Holes:" + totalHole + "Avg: " + avg +"KB Total:" + amountHole + "KB Percent:" + percent + "%" );
 	}
-	
+	}
+	public void compact() {//compat all touching holes
+		
+	}
 	//PROCESS COMPLETE
 	//replace finsihed process with Process named Free, time -1, size of old process
 	
