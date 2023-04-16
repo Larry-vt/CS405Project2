@@ -25,21 +25,21 @@ public class Main {
        		 MEMORY_MAX =  Integer.parseInt(arr[1]);
        		 break;
        	 case 1:
-       		PROC_SIZE_MAX =  Integer.parseInt(arr[1]);//not zero
+       		PROC_SIZE_MAX =  Integer.parseInt(arr[1]);
        		 break;
        	 case 2:
        		NUM_PROC =  Integer.parseInt(arr[1]);
        		 break;
        	 case 3:
-       		MAX_PROC_TIME=  Integer.parseInt(arr[1]);//convert to seconds and whole and not 0
+       		MAX_PROC_TIME=  Integer.parseInt(arr[1]);
        		 break;
        	 }
 		}
 		for(int i =0; i<NUM_PROC;i++) {
 			Random rand = new Random();
 			String name = "p" + i;
-			int time =  rand.nextInt(MAX_PROC_TIME+1);
-			int size =  rand.nextInt(PROC_SIZE_MAX+1);
+			int time =  (int) ((int)Math.floor(Math.random() * (MAX_PROC_TIME - 1 + 1) + 1) * .001); // random ms converted to seconds
+			int size =  (int)Math.floor(Math.random() * (PROC_SIZE_MAX - 1 + 1) + 1);//convert to seconds and whole and not 0
 			Process p = new Process(size, time, name);
 		    all.add(p);
 		}
@@ -49,9 +49,9 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		System.out.println(FileReader("src/test"));
-		System.out.println(MEMORY_MAX);
-		MemoryAllocator ma = new MemoryAllocator(MEMORY_MAX,FileReader("src/test"));
+		ArrayList <Process> test = FileReader("src/test");
+		MemoryAllocator ma = new MemoryAllocator(MEMORY_MAX,test);
+		ma.worstfit();
 		//ma.firstfit();
 		//ma.bestfit();
 		//ma.worstfit();
