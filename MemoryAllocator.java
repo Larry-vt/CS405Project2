@@ -71,25 +71,25 @@ public class MemoryAllocator {
 	public void firstfit() {
 		boolean full = false; // max memory hax been reached or like only one pocket at the end that can't fit process
 		int current_Memory= 0;//keeps track of how much memory is in use
-		int id =0;
 		while(!full) {//memory not full first run through 
-			if(all.get(id).size + current_Memory<= memory_Max) {
-				current_Memory+= all.get(id).size;//keep track of how much memory we've uised
-				running.add(all.get(id));//if process fits add to running
-				id++;
+			for(int i =0;i<all.size();i++) {
+				if(all.get(i).size + current_Memory<= memory_Max) {
+					current_Memory+= all.get(i).size;//keep track of how much memory we've uised
+					running.add(all.get(i));//if process fits add to running
 			}else { //can't fit in the first allocation
-				full = true;
 				if(current_Memory != memory_Max) {
 					Process endcap = new Process(memory_Max-current_Memory,-1,"free");//place end cap place holder with amount of free left
 					running.add(endcap);
-					for(int x =0;x<id;x++) {
+					for(int x =0;x<i;x++) {
 						all.remove(0);
 					}
+					full = true;
 					break;
 				}else {
-					for(int x =0;x<id;x++) {
+					for(int x =0;x<i;x++) {
 						all.remove(0);
 					}
+					full = true;
 					break;
 					
 				}
@@ -139,7 +139,8 @@ public class MemoryAllocator {
 						//print the facts
 						compact();
 						print();
-				}
+			}
+		}
 					}	
 	
 	public void worstfit() {
@@ -250,11 +251,13 @@ public class MemoryAllocator {
 					for(int x =0;x<id;x++) {
 						all.remove(0);
 					}
+					full = true;
 					break;
 				}else {
 					for(int x =0;x<id;x++) {
 						all.remove(0);
 					}
+					full = true;
 					break;
 					
 				}
@@ -270,13 +273,13 @@ public class MemoryAllocator {
 				//check for holes check left of every index in running in current is hole and right is hole then fill check for right if also free
 				//ALG
 				int index = 0;//where the most space wasted pocket is //where the most space wasted pocket is 
-				int best =100000000;//most space wasted
+				int best = -1;//most space wasted
 				boolean change = false;
 
 					if(!all.isEmpty() && fits(all.get(0).size)) {// if current waiting process can fit
 						for(int i =0;i<running.size();i++) {
-					if(running.get(i).name.equals("free")){
-						if(best > running.get(i).size - all.get(0).size ) {// if better by wasting more space
+					if(running.get(i).name.equals("free") && running.get(i).size - all.get(0).size >= 0){
+						if(best < running.get(i).size - all.get(0).size ) {// if better by wasting more space
 							best = running.get(i).size - all.get(0).size;//the most wasted space
 							index = i;
 							change = true;

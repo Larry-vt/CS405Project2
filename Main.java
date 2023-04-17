@@ -53,15 +53,15 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		ArrayList <Process> test = FileReader("src/test");
-		System.out.println("WORST FIT");
-		MemoryAllocator wf = new MemoryAllocator(MEMORY_MAX,test);
-		wf.worstfit();
+	//	System.out.println("WORST FIT");
+	//	MemoryAllocator wf = new MemoryAllocator(MEMORY_MAX,test);
+	//	wf.worstfit();
 		System.out.println("BEST FIT");
 		MemoryAllocator bf = new MemoryAllocator(MEMORY_MAX,test);
 		bf.bestfit();
-		System.out.println("FIRST FIT");
-		MemoryAllocator ff = new MemoryAllocator(MEMORY_MAX,test);
-		ff.firstfit();
+		//System.out.println("FIRST FIT");
+		//MemoryAllocator ff = new MemoryAllocator(MEMORY_MAX,test);
+		//ff.firstfit();
 	}
 
 }
