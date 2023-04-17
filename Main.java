@@ -39,6 +39,9 @@ public class Main {
 			Random rand = new Random();
 			String name = "p" + i;
 			int time =  (int) ((int)Math.floor(Math.random() * (MAX_PROC_TIME - 1 + 1) + 1) * .001); // random ms converted to seconds
+			while(time ==0) {
+			time =  (int) ((int)Math.floor(Math.random() * (MAX_PROC_TIME - 1 + 1) + 1) * .001);	//no zeros
+			}
 			int size =  (int)Math.floor(Math.random() * (PROC_SIZE_MAX - 1 + 1) + 1);//convert to seconds and whole and not 0
 			Process p = new Process(size, time, name);
 		    all.add(p);
