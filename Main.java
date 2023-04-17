@@ -38,7 +38,8 @@ public class Main {
 		for(int i =0; i<NUM_PROC;i++) {
 			Random rand = new Random();
 			String name = "p" + i;
-			int time =  (int) ((int)Math.floor(Math.random() * (MAX_PROC_TIME - 1 + 1) + 1) * .001); // random ms converted to seconds
+			//int time =  (int) ((int)Math.floor(Math.random() * (MAX_PROC_TIME - 1 + 1) + 1) * .001); // random ms converted to seconds
+			int time =  (int) ((int)Math.floor(Math.random() * (3 - 1 + 1) + 1)); // random ms converted to seconds
 			while(time ==0) {
 			time =  (int) ((int)Math.floor(Math.random() * (MAX_PROC_TIME - 1 + 1) + 1) * .001);	//no zeros
 			}

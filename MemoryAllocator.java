@@ -24,7 +24,9 @@ public class MemoryAllocator {
 		total_Processes = all.size();
 	}
 	public void print() { // print every run;
-	System.out.println(all.get(0).name + " waiting with size:" + all.get(0).size);
+	if(!all.isEmpty()) {
+		System.out.println(all.get(0).name + " waiting with size:" + all.get(0).size);
+	}
 	System.out.println(running);//prints out current running list
 	//number of holes
 	double amountHole =0;
@@ -39,7 +41,7 @@ public class MemoryAllocator {
 
 	}
 	double avg = amountHole/totalHole;
-	double percent =  ((double)totalHole/(double)memory_Max) * 100;
+	double percent =  (double)((double)totalHole/(double)memory_Max) * 100;
 	System.out.println("Stats: Number of Holes:" + totalHole + "Avg: " + avg +"KB Total:" + amountHole + "KB Percent:" + percent + "%" );
 	}
 	public void compact() {//compact all touching holes
@@ -54,6 +56,15 @@ public class MemoryAllocator {
 			}
 		}
 		
+		
+	}
+	public boolean fits(int size) {
+		for(int i =0;i<running.size();i++) {
+			if(size<= running.get(i).size && running.get(i).name.equals("free")) {
+				return true;
+			}
+		}
+		return false;
 		
 	}
 
@@ -96,50 +107,52 @@ public class MemoryAllocator {
 				compact();
 				//check for holes check left of every index in running in current is hole and right is hole then fill check for right if also free
 				//ALG
-
-				boolean stopped = false;//when trying to add a process couldn't anymore so we are stopped
-				while (!stopped) {
-				boolean open = false; //is their any space open for the next process?
-				compact();
 				int index = 0;//where the most space wasted pocket is //where the most space wasted pocket is 
 				int worst =-1;//most space wasted
-				for(int i =0; i< running.size();i++) {//check if any waiting process can fit in holes worstfirst alg here!!!!!!!!!!!!
-					if(running.get(i).name.equals("free") && running.get(i).size >= all.get(0).size) {// if the current space is free
+				boolean change = false;
+
+					if(!all.isEmpty() && fits(all.get(0).size)) {// if current waiting process can fit
+						for(int i =0;i<running.size();i++) {
+					if(running.get(i).name.equals("free")){
 						if(worst < running.get(i).size - all.get(0).size ) {// if better by wasting more space
 							worst = running.get(i).size - all.get(0).size;//the most wasted space
 							index = i;
-							open = true;// a spot for the process is open
+							change = true;
 						}			
 				}
-				
-				if(open) {// the most wasted space block fill with process split remainder
-					if(running.get(index).size - all.get(0).size !=0) {
-						Process newHole = new Process(running.get(index).size - all.get(0).size,-1,"free"); // new hole
-						running.set(index, all.get(0));//set where the hole was wiht new process
-						running.add(index+1,newHole);//add hole next to old self
-					}else {
-						running.set(index, all.get(0));//set where the hole was wiht new process
+				}
+				}
+					if(change) {// are we able to make  a change?
+						if(running.get(index).size - all.get(0).size !=0) {
+							Process newHole = new Process(running.get(index).size - all.get(0).size,-1,"free"); // new hole
+							running.set(index, all.get(0));//set where the hole was wiht new process
+							running.add(index+1,newHole);//add hole next to old self
+							all.remove(0);
+						}else {
+							running.set(index, all.get(0));//set where the hole was wiht new process
+							all.remove(0);
+						}
+					}else {//if no change take time down and remove complete processes
+						//check run times
+						for(int i =0;i<running.size();i++){
+							running.get(i).time --;
+							if(running.get(i).time == 0) {//if current running process has finished
+								done.add(running.get(i));
+								Process empty = new Process(running.get(i).size,-1,"free");
+								running.set(i,empty);//set open spot to "free"
+								
+							}
+						}
+						//print the facts
+						print();
+				}
 					}
 
-				}else {//if their is no new opening possible we stop because  process can't be added hyphens?
-					stopped = true;
-				}
-				}
-				}
-				//check run times
-				for(int i =0;i<running.size();i++){
-					running.get(i).time --;
-					if(running.get(i).time == 0) {//if current running process has finished
-						done.add(running.get(i));
-						Process empty = new Process(running.get(i).size,-1,"free");
-						running.set(i,empty);//set open spot to "free"
-						
-					}
-				}
-				//print the facts
-				print();
 			}
-		}
+				
+
+			
+		
 													
 									
 		
