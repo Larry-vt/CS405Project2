@@ -41,7 +41,7 @@ public class MemoryAllocator {
 
 	}
 	double avg = amountHole/totalHole;
-	double percent =  (double)((double)totalHole/(double)memory_Max) * 100;
+	double percent =  (double)((double)amountHole/(double)memory_Max) * 100;
 	System.out.println("Stats: Number of Holes:" + totalHole + "Avg: " + avg +"KB Total:" + amountHole + "KB Percent:" + percent + "%" );
 	}
 	public void compact() {//compact all touching holes
