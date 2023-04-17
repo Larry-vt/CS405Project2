@@ -68,9 +68,80 @@ public class MemoryAllocator {
 		
 	}
 
-	public firstfit() {
+	public void firstfit() {
+		boolean full = false; // max memory hax been reached or like only one pocket at the end that can't fit process
+		int current_Memory= 0;//keeps track of how much memory is in use
+		int id =0;
+		while(!full) {//memory not full first run through 
+			if(all.get(id).size + current_Memory<= memory_Max) {
+				current_Memory+= all.get(id).size;//keep track of how much memory we've uised
+				running.add(all.get(id));//if process fits add to running
+				id++;
+			}else { //can't fit in the first allocation
+				full = true;
+				if(current_Memory != memory_Max) {
+					Process endcap = new Process(memory_Max-current_Memory,-1,"free");//place end cap place holder with amount of free left
+					running.add(endcap);
+					for(int x =0;x<id;x++) {
+						all.remove(0);
+					}
+					break;
+				}else {
+					for(int x =0;x<id;x++) {
+						all.remove(0);
+					}
+					break;
+					
+				}
+
+
+			
+		}
+		}
+		//Add starting processes till full
 		
-	}
+			while(total_Processes != done.size()){// while not all process are complete
+				compact();
+				//check for holes check left of every index in running in current is hole and right is hole then fill check for right if also free
+				//ALG
+				boolean change = false;
+					if(!all.isEmpty() && fits(all.get(0).size)) {// if current waiting process can fit
+						for(int i =0;i<running.size();i++) {
+					if(running.get(i).name.equals("free") && running.get(i).size >= all.get(0).size){ //if we have free space add
+						if(running.get(i).size - all.get(0).size !=0) {
+							Process newHole = new Process(running.get(i).size - all.get(0).size,-1,"free"); // new hole
+							running.set(i, all.get(0));//set where the hole was wiht new process
+							running.add(1,newHole);//add hole next to old self
+							all.remove(0);
+							change = true;
+							break;
+
+						}else {
+							running.set(i, all.get(0));//set where the hole was wiht new process
+							all.remove(0);
+							change = true;
+							break;
+						}
+				}
+				}
+				}
+					if(!change) {
+						//check run times
+						for(int i =0;i<running.size();i++){
+							running.get(i).time --;
+							if(running.get(i).time == 0) {//if current running process has finished
+								done.add(running.get(i));
+								Process empty = new Process(running.get(i).size,-1,"free");
+								running.set(i,empty);//set open spot to "free"
+							}
+							}
+						}
+						//print the facts
+						compact();
+						print();
+				}
+					}	
+	
 	public void worstfit() {
  		boolean full = false; // max memory hax been reached or like only one pocket at the end that can't fit process
 		int current_Memory= 0;//keeps track of how much memory is in use
@@ -144,6 +215,7 @@ public class MemoryAllocator {
 							}
 						}
 						//print the facts
+						compact();
 						print();
 				}
 					}
@@ -161,9 +233,86 @@ public class MemoryAllocator {
 		
 		
 	
-	public bestfit() {
+	public void bestfit() {
+		boolean full = false; // max memory hax been reached or like only one pocket at the end that can't fit process
+		int current_Memory= 0;//keeps track of how much memory is in use
+		int id =0;
+		while(!full) {//memory not full first run through 
+			if(all.get(id).size + current_Memory<= memory_Max) {
+				current_Memory+= all.get(id).size;//keep track of how much memory we've uised
+				running.add(all.get(id));//if process fits add to running
+				id++;
+			}else { //can't fit in the first allocation
+				full = true;
+				if(current_Memory != memory_Max) {
+					Process endcap = new Process(memory_Max-current_Memory,-1,"free");//place end cap place holder with amount of free left
+					running.add(endcap);
+					for(int x =0;x<id;x++) {
+						all.remove(0);
+					}
+					break;
+				}else {
+					for(int x =0;x<id;x++) {
+						all.remove(0);
+					}
+					break;
+					
+				}
+
+
+			
+		}
+		}
+		//Add starting processes till full
 		
-	}
+			while(total_Processes != done.size()){// while not all process are complete
+				compact();
+				//check for holes check left of every index in running in current is hole and right is hole then fill check for right if also free
+				//ALG
+				int index = 0;//where the most space wasted pocket is //where the most space wasted pocket is 
+				int best =100000000;//most space wasted
+				boolean change = false;
+
+					if(!all.isEmpty() && fits(all.get(0).size)) {// if current waiting process can fit
+						for(int i =0;i<running.size();i++) {
+					if(running.get(i).name.equals("free")){
+						if(best > running.get(i).size - all.get(0).size ) {// if better by wasting more space
+							best = running.get(i).size - all.get(0).size;//the most wasted space
+							index = i;
+							change = true;
+						}			
+				}
+				}
+				}
+					if(change) {// are we able to make  a change?
+						if(running.get(index).size - all.get(0).size !=0) {
+							Process newHole = new Process(running.get(index).size - all.get(0).size,-1,"free"); // new hole
+							running.set(index, all.get(0));//set where the hole was wiht new process
+							running.add(index+1,newHole);//add hole next to old self
+							all.remove(0);
+						}else {
+							running.set(index, all.get(0));//set where the hole was wiht new process
+							all.remove(0);
+						}
+					}else {//if no change take time down and remove complete processes
+						//check run times
+						for(int i =0;i<running.size();i++){
+							running.get(i).time --;
+							if(running.get(i).time == 0) {//if current running process has finished
+								done.add(running.get(i));
+								Process empty = new Process(running.get(i).size,-1,"free");
+								running.set(i,empty);//set open spot to "free"
+								
+							}
+						}
+						//print the facts
+						compact();
+						print();
+						}
+					}
+
+			}
+		
 
 
 	public static void main(String[] args) {
